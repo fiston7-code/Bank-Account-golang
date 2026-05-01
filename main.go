@@ -65,11 +65,36 @@ func (a *Account) Borrow(amount int) {
 
 }
 
+// // repay methode
+func (a *Account) Repay(amount int) bool { // <-- On ajoute bool ici
+	if !a.IsActive || amount > a.Loan || a.Balance < amount {
+		// On garde tes messages d'erreur à l'intérieur
+		if !a.IsActive {
+			fmt.Println("Compte inactif.")
+		}
+		if amount > a.Loan {
+			fmt.Printf("Vous ne devez que %d$...\n", a.Loan)
+		}
+		if a.Balance < amount {
+			fmt.Println("Solde insuffisant.")
+		}
+
+		return false // <-- On renvoie "Faux" si une sécurité bloque
+	}
+
+	a.Balance -= amount
+	a.Loan -= amount
+	fmt.Printf("Merci ! Remboursement de %d$ effectué.\n", amount)
+
+	return true // <-- On renvoie "Vrai" si tout s'est bien passé
+}
+
 func main() {
 
 	depot := 200
 	retrait := 300
-	emprunter := 5000
+	emprunter := 80
+	payer := 50
 
 	account := Account{}
 	fmt.Printf("voici le user account initial %d\n", account.Balance)
@@ -84,6 +109,13 @@ func main() {
 	fmt.Printf("cher client vous venez de retirer %d$ dans votre compte et le solde restant est de : %d\n", retrait, account.Balance)
 	account.Borrow(emprunter)
 	fmt.Printf("cher client vous venez de recevoir %d$ et votre solde est de : %d\n", emprunter, account.Balance)
+	succes := account.Repay(payer)
+
+	if succes {
+		fmt.Printf("Confirmation : Votre nouveau solde est de : %d\n", account.Balance)
+	} else {
+		fmt.Println("⚠️ Opération annulée par la banque.")
+	}
 }
 
 // Challenge : Système de Gestion Bancaire "ZandoBank"
