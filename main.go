@@ -8,7 +8,7 @@ type Account struct {
 	IsActive bool
 }
 
-// la methede d\ourveture d'un compte
+// open account methode
 
 func (a *Account) OpenAccount() {
 	if a.IsActive {
@@ -23,7 +23,7 @@ func (a *Account) OpenAccount() {
 
 }
 
-// la methode deposer
+// deposit methode
 
 func (a *Account) Deposit(amount int) {
 	if !a.IsActive {
@@ -33,7 +33,7 @@ func (a *Account) Deposit(amount int) {
 	a.Balance += amount
 }
 
-// Retirer(montant) :
+// Withdraw methode
 
 func (a *Account) Withdraw(amount int) {
 	if !a.IsActive {
@@ -49,10 +49,27 @@ func (a *Account) Withdraw(amount int) {
 
 }
 
+//     borrow methode
+
+func (a *Account) Borrow(amount int) {
+	if !a.IsActive || a.Loan > 0 {
+		fmt.Println("Erreur : Compte inactif ou dette déjà existante.")
+		return
+	} else {
+		a.Loan = amount
+		a.Balance += amount
+
+		fmt.Printf("Prêt accordé ! +%d$ sur votre solde. Dette actuelle : %d$\n", amount, a.Loan)
+
+	}
+
+}
+
 func main() {
 
 	depot := 200
 	retrait := 300
+	emprunter := 5000
 
 	account := Account{}
 	fmt.Printf("voici le user account initial %d\n", account.Balance)
@@ -65,6 +82,8 @@ func main() {
 
 	account.Withdraw(retrait)
 	fmt.Printf("cher client vous venez de retirer %d$ dans votre compte et le solde restant est de : %d\n", retrait, account.Balance)
+	account.Borrow(emprunter)
+	fmt.Printf("cher client vous venez de recevoir %d$ et votre solde est de : %d\n", emprunter, account.Balance)
 }
 
 // Challenge : Système de Gestion Bancaire "ZandoBank"
