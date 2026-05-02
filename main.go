@@ -89,12 +89,37 @@ func (a *Account) Repay(amount int) bool { // <-- On ajoute bool ici
 	return true // <-- On renvoie "Vrai" si tout s'est bien passé
 }
 
+//    Fermer() :
+
+//         Vérifier : est-ce que le compte est actif ET le solde est à 0 ET la dette est à 0 ?
+
+//         Si oui -> EstActif = false.
+
+//         Sinon -> afficher pourquoi on ne peut pas fermer (ex: "Il reste de l'argent" ou "Dette en cours").
+
+// close an account
+func (a *Account) Close() bool { // Majuscule pour être exportable
+	if !a.IsActive {
+		fmt.Println("Le compte est déjà fermé.")
+		return false
+	}
+
+	if a.Balance > 0 || a.Loan > 0 {
+		fmt.Printf("Impossible de fermer : Solde (%d$) ou Dette (%d$) non nuls.\n", a.Balance, a.Loan)
+		return false
+	}
+
+	a.IsActive = false
+	fmt.Println("Compte clôturé avec succès. Merci de votre fidélité !")
+	return true
+}
+
 func main() {
 
-	depot := 200
-	retrait := 300
-	emprunter := 80
-	payer := 50
+	depot := 0
+	retrait := 500
+	emprunter := 0
+	payer := 0
 
 	account := Account{}
 	fmt.Printf("voici le user account initial %d\n", account.Balance)
@@ -116,6 +141,17 @@ func main() {
 	} else {
 		fmt.Println("⚠️ Opération annulée par la banque.")
 	}
+
+	reussite := account.Close()
+
+	if reussite {
+		fmt.Println("Statut final : Fermé (Succès)")
+	} else if !account.IsActive {
+		fmt.Println("Statut final : Fermé (Déjà fait)")
+	} else {
+		fmt.Println("Statut final : Toujours ouvert (Erreur)")
+	}
+
 }
 
 // Challenge : Système de Gestion Bancaire "ZandoBank"
